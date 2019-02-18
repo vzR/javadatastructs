@@ -10,4 +10,7 @@ public interface List<E> {
     // returns (but does not remove the element at index i
     E get(int i) throws IndexOutOfBoundsException;
 
+    // replaces the element at index i with e, and returns the replaced element
+    E set(int i, E e) throws IndexOutOfBoundsException;
+
 }
