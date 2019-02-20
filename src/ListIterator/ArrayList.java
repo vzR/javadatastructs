@@ -42,10 +42,11 @@ public class ArrayList<E> implements List<E>{
 
 
     /* inserts element e to be at index i, shifting all subsequent elements later*/
-    public void add(int i, E e) throws IndexOutOfBoundsException, IllegalStateException {
+    public void add(int i, E e) throws IndexOutOfBoundsException {
         checkIndex(i, size + 1);
-        if (size == data.length) // not enough capacity
-            throw new IllegalStateException("array is full");
+       if (size == data.length)
+           resize(2 * data.length); // double current capacity
+
         for (int k = size - 1; k >= i; k--)
             data[k+1] = data[k]; // start by shifting rightmost
         data[i] = e;
@@ -63,6 +64,12 @@ public class ArrayList<E> implements List<E>{
         return temp;
     }
 
+    protected void resize(int capacity) {
+        E[] temp = (E[]) new Object[capacity]; // safe cast
+        for (int k = 0; k < size; k++)
+            temp[k] = data[k];
+        data = temp; // start using the new array
+    }
 
     // utility method
     // check whether the given index is in the range [0, n-1]
