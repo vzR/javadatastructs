@@ -1,6 +1,48 @@
 package ListIterator;
 
-public class ArrayList<E> implements List<E>{
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class ArrayList<E> implements List<E> {
+
+    private class ArrayIterator implements Iterator<E> {
+        private int j = 0; // index of the next element to report
+        private boolean removable = false; // can remove be called at this time?
+
+        /*tests whether the iterator has a next object
+        * @return true if there are further objects, false othewise*/
+        public boolean hasNext() {
+            return j < size; // size is field of outer instance
+        }
+
+        /* returns the next object in the iterator
+        *
+        * @return next object
+        * @Throws NoSuchElementException if there are no further elements*/
+
+        public E next() throws NoSuchElementException {
+            if (j == size) throw new NoSuchElementException("no next element");
+            removable = true; // this element can be subsequently removed
+            return data[j++];  // post-increment j, so it is ready for future call to next
+        }
+
+        /* removes the element returned by most recent call to next
+        * @throws IllegalStateException if next has not yet been called
+        * @throws IllegalStateException if remove was already called since recent next*/
+        public void remove() throws IllegalStateException {
+            if (!removable) throw new IllegalStateException("nothing to remove");
+            ArrayList.this.remove(j - 1); // that was the last one returned
+            j--; // next element has shifted one cell to the left
+            removable = false; // do not allow remove again until next is called
+        }
+    } // end of nested ArrayIterator class
+
+    public Iterator<E> iterator() {
+        return new ArrayIterator(); // create a new instance of the inner class
+    }
+
+
+
     // instance variables
     // default array capacity
     public static final int CAPACITY = 16;
