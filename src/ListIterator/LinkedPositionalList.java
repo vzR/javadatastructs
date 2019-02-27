@@ -4,6 +4,26 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class LinkedPositionalList<E> implements PositionalList<E> {
+    /* insertion-sort of a positional list of integers into non-decreasing order*/
+    public static void insertionSort(PositionalList<Integer> list) {
+        Position<Integer> marker = list.first(); // last position known to be sorted
+        while (marker != list.last()) {
+            Position<Integer> pivot = list.after(marker);
+            int value = pivot.getElement(); // number to be placed
+            if (value > marker.getElement()) marker = pivot; // pivot already sorted
+            else { // must relocate pivot
+                Position<Integer> walk = marker; // first leftmost item greater than value
+                while (walk != list.first() && list.before(walk).getElement() > value)
+                    walk = list.before(walk);
+                list.remove(pivot); // remove pivot entry and
+                list.addBefore(walk, value); // reinsert value in front of walk
+            }
+        }
+    }
+
+
+
+
     /* nested PositionIterator class*/
     private class PositionIterator implements Iterator<Position<E>> {
         private Position<E> cursor = first(); // position of the next element to report
@@ -58,10 +78,7 @@ public class LinkedPositionalList<E> implements PositionalList<E> {
         }
     }
 
-    /*returns an iterator of the elements stored in the list*/
-    public Iterator<E> iterator() {
-        return new ElementIterator();
-    }
+
 
 
     /* nested NOde class*/
@@ -190,6 +207,11 @@ public class LinkedPositionalList<E> implements PositionalList<E> {
     public Position<E> addBefore(Position<E> p, E e) throws IllegalArgumentException {
         Node<E> node = validate(p);
         return addBetween(e, node.getPrev(), node);
+    }
+
+    /*returns an iterator of the elements stored in the list*/
+    public Iterator<E> iterator() {
+        return new ElementIterator();
     }
 
     // inserts element e immediately after position p, and returns its new position
