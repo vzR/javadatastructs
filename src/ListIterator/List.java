@@ -13,4 +13,6 @@ public interface List<E> {
     // replaces the element at index i with e, and returns the replaced element
     E set(int i, E e) throws IndexOutOfBoundsException;
 
+    void add(int i, E e) throws IndexOutOfBoundsException;
+
 }
